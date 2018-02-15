@@ -1,4 +1,4 @@
-package com.github.bogdan5555556.stepLogger;
+package com.github.bogdan5555556.CucumberStepsConsoleLogger;
 
 import cucumber.runtime.StepDefinitionMatch;
 import gherkin.formatter.Formatter;
@@ -20,9 +20,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class StepLogger implements Reporter, Formatter {
+public class CucumberStepsConsoleLogger implements Reporter, Formatter {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(StepLogger.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(CucumberStepsConsoleLogger.class);
 
     private static final String ANSI_MAGENTA = "\u001B[35m";
     private static final String ANSI_RESET = "\u001B[0m";
