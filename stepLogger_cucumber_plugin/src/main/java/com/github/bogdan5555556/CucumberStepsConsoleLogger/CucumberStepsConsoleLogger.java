@@ -15,7 +15,6 @@ import gherkin.formatter.model.Step;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,8 +27,6 @@ public class CucumberStepsConsoleLogger implements Reporter, Formatter {
     private static final String ANSI_RESET = "\u001B[0m";
 
     private List<Step> steps = new ArrayList<>();
-    String stepLocation;
-    private List<Method> beforeFeature = new ArrayList<>();
 
     @Override
     public void syntaxError(String state, String event, List<String> legalEvents, String uri, Integer line) {

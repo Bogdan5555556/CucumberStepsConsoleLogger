@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.github.bogdan5555556</groupId>
-    <artifactId>stepLogger-cucumber_plugin</artifactId>
+    <artifactId>mrph-cucumber-steps-console-logger</artifactId>
     <version>1.0.1</version>
     <packaging>jar</packaging>
 
