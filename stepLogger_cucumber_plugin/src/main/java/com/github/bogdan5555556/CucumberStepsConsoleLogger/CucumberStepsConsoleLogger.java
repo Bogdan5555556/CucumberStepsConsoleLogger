@@ -28,6 +28,16 @@ public class CucumberStepsConsoleLogger implements Reporter, Formatter {
 
     private List<Step> steps = new ArrayList<>();
 
+    private Colours colour;
+
+    CucumberStepsConsoleLogger(){
+        String colour = System.getenv("CucumberStepsConsoleLoggerColour");
+        if(colour == null){
+            this.colour = Colours.DEFAULT;
+        }
+        else this.colour = Colours.byName(colour.toUpperCase());
+    }
+
     @Override
     public void syntaxError(String state, String event, List<String> legalEvents, String uri, Integer line) {
     }
@@ -128,7 +138,17 @@ public class CucumberStepsConsoleLogger implements Reporter, Formatter {
             stepLogName = stepLogName + "\n";
             stepLogName = stepLogName + "\'\'\'" + "\n" + step.getDocString().getValue() + "\n" + "\'\'\'";
         }
-        LOGGER.info("\n\n---------- Test Step Execution ----------\n" + ANSI_MAGENTA + stepLogName + ANSI_RESET + "\n---------- Test Step Execution ----------\n");
+        LOGGER.info(buildStepExecutionMessageBuild(stepLogName));
+    }
+
+    private String buildStepExecutionMessageBuild(String stepLogName){
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("\n\n---------- Test Step Execution ----------\n");
+        colour.appendTo(stringBuilder);
+        stringBuilder.append(stepLogName);
+        Colours.RESET.appendTo(stringBuilder);
+        stringBuilder.append("\n---------- Test Step Execution ----------\n");
+        return stringBuilder.toString();
     }
 
     @Override
