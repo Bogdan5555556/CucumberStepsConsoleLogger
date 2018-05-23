@@ -30,7 +30,7 @@ public class CucumberStepsConsoleLogger implements Reporter, Formatter {
 
     private Colours colour;
 
-    CucumberStepsConsoleLogger(){
+    public CucumberStepsConsoleLogger(){
         String colour = System.getenv("CucumberStepsConsoleLoggerColour");
         if(colour == null){
             this.colour = Colours.DEFAULT;
