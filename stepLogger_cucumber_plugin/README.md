@@ -1,1 +1,1 @@
-# stepLogger
+Maven plugin for logging Cucumber Steps
