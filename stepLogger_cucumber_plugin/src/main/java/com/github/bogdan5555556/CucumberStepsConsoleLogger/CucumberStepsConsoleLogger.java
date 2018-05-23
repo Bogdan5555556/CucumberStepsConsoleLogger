@@ -23,9 +23,6 @@ public class CucumberStepsConsoleLogger implements Reporter, Formatter {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(CucumberStepsConsoleLogger.class);
 
-    private static final String ANSI_MAGENTA = "\u001B[35m";
-    private static final String ANSI_RESET = "\u001B[0m";
-
     private List<Step> steps = new ArrayList<>();
 
     private Colours colour;
@@ -117,6 +114,9 @@ public class CucumberStepsConsoleLogger implements Reporter, Formatter {
     @Override
     public void match(Match match) {
         Step step = null;
+        if(!(match instanceof StepDefinitionMatch)){
+            return;
+        }
         String stepName = ((StepDefinitionMatch) match).getStepName();
         for (Step step1 : steps) {
             if (step1.getName().equals(stepName)) {
@@ -124,7 +124,7 @@ public class CucumberStepsConsoleLogger implements Reporter, Formatter {
             }
         }
 
-        String stepLogName = step.getKeyword() + " " + step.getName();
+        String stepLogName = step.getKeyword() + step.getName();
         if (step.getRows() != null) {
             for (DataTableRow dataTableRow : step.getRows()) {
                 stepLogName = stepLogName + "\n";
