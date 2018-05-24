@@ -16,6 +16,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 
@@ -27,12 +28,11 @@ public class CucumberStepsConsoleLogger implements Reporter, Formatter {
 
     private Colours colour;
 
-    public CucumberStepsConsoleLogger(){
+    public CucumberStepsConsoleLogger() {
         String colour = System.getenv("CucumberStepsConsoleLoggerColour");
-        if(colour == null){
+        if (colour == null) {
             this.colour = Colours.DEFAULT;
-        }
-        else this.colour = Colours.byName(colour.toUpperCase());
+        } else this.colour = Colours.byName(colour.toUpperCase());
     }
 
     @Override
@@ -114,7 +114,7 @@ public class CucumberStepsConsoleLogger implements Reporter, Formatter {
     @Override
     public void match(Match match) {
         Step step = null;
-        if(!(match instanceof StepDefinitionMatch)){
+        if (!(match instanceof StepDefinitionMatch)) {
             return;
         }
         String stepName = ((StepDefinitionMatch) match).getStepName();
@@ -123,25 +123,46 @@ public class CucumberStepsConsoleLogger implements Reporter, Formatter {
                 step = step1;
             }
         }
-
-        String stepLogName = step.getKeyword() + step.getName();
-        if (step.getRows() != null) {
-            for (DataTableRow dataTableRow : step.getRows()) {
-                stepLogName = stepLogName + "\n";
-                for (String cell : dataTableRow.getCells()) {
-                    stepLogName = stepLogName + "\t|\t" + cell;
+        if (step != null) {
+            StringBuilder stepLogName = new StringBuilder(step.getKeyword() + step.getName());
+            if (step.getRows() != null) {
+                List<Integer> maxElementInColumn = getMaxLengthCells(step.getRows());
+                for (DataTableRow dataTableRow : step.getRows()) {
+                    stepLogName.append("\n");
+                    for (int i = 0; i < dataTableRow.getCells().size(); i++) {
+                        String cellValue = dataTableRow.getCells().get(i);
+                        char[] whiteSpaces = new char[maxElementInColumn.get(i) - cellValue.length()];
+                        Arrays.fill(whiteSpaces, ' ');
+                        stepLogName.append("\t|\t").append(cellValue).append(String.valueOf(whiteSpaces));
+                    }
+                    stepLogName.append("\t|\t");
                 }
-                stepLogName = stepLogName + "\t|\t";
             }
+            if (step.getDocString() != null) {
+                stepLogName.append("\n");
+                stepLogName.append("\'\'\'" + "\n").append(step.getDocString().getValue()).append("\n").append("\'\'\'");
+            }
+            LOGGER.info(buildStepExecutionMessage(stepLogName.toString()));
         }
-        if (step.getDocString() != null) {
-            stepLogName = stepLogName + "\n";
-            stepLogName = stepLogName + "\'\'\'" + "\n" + step.getDocString().getValue() + "\n" + "\'\'\'";
-        }
-        LOGGER.info(buildStepExecutionMessage(stepLogName));
     }
 
-    private String buildStepExecutionMessage(String stepLogName){
+    private List<Integer> getMaxLengthCells(List<DataTableRow> rows) {
+        int cellsNumber = rows.get(0).getCells().size();
+        List<Integer> maxElementInColumn = new ArrayList<>();
+        for (int i = 0; i < cellsNumber; i++) {
+            int maxValue = 0;
+            for (DataTableRow row : rows) {
+                int length = row.getCells().get(i).length();
+                if (length > maxValue) {
+                    maxElementInColumn.add(i, length);
+                    maxValue = length;
+                }
+            }
+        }
+        return maxElementInColumn;
+    }
+
+    private String buildStepExecutionMessage(String stepLogName) {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("\n\n---------- Test Step Execution ----------\n");
         colour.appendTo(stringBuilder);
