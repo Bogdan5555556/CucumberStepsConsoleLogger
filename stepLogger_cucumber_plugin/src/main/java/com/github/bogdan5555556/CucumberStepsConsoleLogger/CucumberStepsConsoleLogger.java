@@ -129,7 +129,7 @@ public class CucumberStepsConsoleLogger implements Reporter, Formatter {
             }
         }
         if (step != null) {
-            stepName = step.getName();
+            CucumberStepsConsoleLogger.stepName = step.getName();
             StringBuilder stepLogName = new StringBuilder(step.getKeyword() + step.getName());
             if (step.getRows() != null) {
                 List<Integer> maxElementInColumn = getMaxLengthCells(step.getRows());
