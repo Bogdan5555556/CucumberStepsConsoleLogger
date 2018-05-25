@@ -28,6 +28,10 @@ public class CucumberStepsConsoleLogger implements Reporter, Formatter {
 
     private Colours colour;
 
+    private static String stepName = null;
+
+    private static String fullStep = null;
+
     public CucumberStepsConsoleLogger() {
         String colour = System.getenv("CucumberStepsConsoleLoggerColour");
         if (colour == null) {
@@ -78,7 +82,8 @@ public class CucumberStepsConsoleLogger implements Reporter, Formatter {
 
     @Override
     public void endOfScenarioLifeCycle(Scenario scenario) {
-
+        stepName = null;
+        fullStep = null;
     }
 
     @Override
@@ -124,6 +129,7 @@ public class CucumberStepsConsoleLogger implements Reporter, Formatter {
             }
         }
         if (step != null) {
+            stepName = step.getName();
             StringBuilder stepLogName = new StringBuilder(step.getKeyword() + step.getName());
             if (step.getRows() != null) {
                 List<Integer> maxElementInColumn = getMaxLengthCells(step.getRows());
@@ -142,7 +148,9 @@ public class CucumberStepsConsoleLogger implements Reporter, Formatter {
                 stepLogName.append("\n");
                 stepLogName.append("\'\'\'" + "\n").append(step.getDocString().getValue()).append("\n").append("\'\'\'");
             }
-            LOGGER.info(buildStepExecutionMessage(stepLogName.toString()));
+            String fullStep = stepLogName.toString();
+            CucumberStepsConsoleLogger.fullStep = fullStep;
+            LOGGER.info(buildStepExecutionMessage(fullStep));
         }
     }
 
@@ -178,5 +186,13 @@ public class CucumberStepsConsoleLogger implements Reporter, Formatter {
 
     @Override
     public void write(String text) {
+    }
+
+    public static String getStepName() {
+        return stepName;
+    }
+
+    public static String getFullStep() {
+        return fullStep;
     }
 }
