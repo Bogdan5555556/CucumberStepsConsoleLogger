@@ -173,9 +173,7 @@ public class CucumberStepsConsoleLogger implements Reporter, Formatter {
     private String buildStepExecutionMessage(String stepLogName) {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("\n\n---------- Test Step Execution ----------\n");
-        colour.appendTo(stringBuilder);
-        stringBuilder.append(stepLogName);
-        Colours.RESET.appendTo(stringBuilder);
+        colour.colorize(stringBuilder, stepLogName);
         stringBuilder.append("\n---------- Test Step Execution ----------\n");
         return stringBuilder.toString();
     }

@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Objects;
 
 public enum Colours {
-    RESET("\u001B[0m"),
     BLACK("\u001B[30m"),
     RED("\u001B[31m"),
     GREEN("\u001B[32m"),
@@ -15,11 +14,13 @@ public enum Colours {
     CYAN("\u001B[36m"),
     WHITE("\u001B[37m"),
     GREY("\u001B[90m"),
-    DEFAULT("\u001B[9m");
+    DEFAULT("");
+
+    public final String RESET = "\u001B[0m";
 
     private String value;
 
-    Colours(String value){
+    Colours(String value) {
         this.value = value;
     }
 
@@ -37,8 +38,11 @@ public enum Colours {
         return null;
     }
 
-    public StringBuilder appendTo(StringBuilder stringBuilder){
-        stringBuilder.append(value);
-        return stringBuilder;
+    public StringBuilder colorize(StringBuilder stringBuilder, String stepLogName) {
+        if (this.equals(DEFAULT)) {
+            return stringBuilder.append(stepLogName);
+        }
+        return stringBuilder.append(value).append(stepLogName).append(RESET);
     }
 }
+
